@@ -3,17 +3,23 @@ An adversarial autoencoder implementation in pytorch using the WGAN with gradien
 
 There's a lot to tweak here as far as balancing the adversarial vs reconstruction loss, but this works and I'll update as I go along. 
 
-The MNIST dataset seems to converge at around 30K steps, while CIFAR arguable doesn't output anything realistic ever. Nonetheless it starts to looks ok at around 50K steps
+The MNIST GAN seems to converge at around 30K steps, while CIFAR10 arguable doesn't output anything realistic ever. Nonetheless it starts to looks ok at around 50K steps
 
+The autoencoder components are able to output good reconstructions much faster than the GAN. ~10k steps on MNIST, and 30K steps on CIFAR10
 
-## MNIST - 33k steps
+## MNIST Gaussian Samples (GAN) - 33k steps
 
 ![output image](plots/mnist/samples_33099.jpg)
 
+## MNIST Reconstructions (AE) - 10k steps
 
-## CIFAR10 - 200k steps
+![output_image](results/mnist/ae_samples_10799)
+
+## CIFAR10 Gaussian Samples (GAN) - 200k steps
 
 ![output image](plots/cifar10/samples_199999.jpg)
+
+## CIFAR10 Reconstructions (AE) - 30k steps
 
 ### Requirements
 
