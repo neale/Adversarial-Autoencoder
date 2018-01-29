@@ -1,5 +1,5 @@
 # Adversarial-Autoencoder
-An adversarial autoencoder implementation in pytorch using the WGAN with gradient penalty framework. 
+A convolutional adversarial autoencoder implementation in pytorch using the WGAN with gradient penalty framework. 
 
 There's a lot to tweak here as far as balancing the adversarial vs reconstruction loss, but this works and I'll update as I go along. 
 
