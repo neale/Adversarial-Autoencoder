@@ -13,7 +13,7 @@ The autoencoder components are able to output good reconstructions much faster t
 
 ## MNIST Reconstructions (AE) - 10k steps
 
-![output_image](results/mnist/ae_samples_10799)
+![output_image](results/mnist/ae_samples_10799.jpg)
 
 ## CIFAR10 Gaussian Samples (GAN) - 200k steps
 
