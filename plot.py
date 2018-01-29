@@ -19,7 +19,7 @@ def flush():
     prints = []
 
     for name, vals in _since_last_flush.items():
-        prints.append("{}\t{}".format(name[14:],
+        prints.append("{}\t{}".format(name,
             np.mean(list(vals.values()))))
         _since_beginning[name].update(vals)
 
