@@ -5,7 +5,7 @@ There's a lot to tweak here as far as balancing the adversarial vs reconstructio
 
 The MNIST GAN seems to converge at around 30K steps, while CIFAR10 arguable doesn't output anything realistic ever. Nonetheless it starts to looks ok at around 50K steps
 
-The autoencoder components are able to output good reconstructions much faster than the GAN. ~10k steps on MNIST, and 30K steps on CIFAR10
+The autoencoder components are able to output good reconstructions much faster than the GAN. ~10k steps on MNIST. The auto encoder is currently bad with CIFAR10
 
 ## MNIST Gaussian Samples (GAN) - 33k steps
 
@@ -19,7 +19,11 @@ The autoencoder components are able to output good reconstructions much faster t
 
 ![output image](plots/cifar10/samples_199999.jpg)
 
-## CIFAR10 Reconstructions (AE) - 30k steps
+## CIFAR10 Reconstructions (AE) - 80k steps
+
+![output image](results/cifar10/ae_samples_80699.jpg)
+
+clearly need to fix this 
 
 ### Requirements
 
