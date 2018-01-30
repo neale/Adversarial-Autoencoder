@@ -35,11 +35,11 @@ clearly need to fix this
 
 To train on MNIST
 
-` python3 train.py --dataset mnist --batch_size 50 --dim 32 -- output_size 784`
+`python3 train.py --dataset mnist --batch_size 50 --dim 32 -o 784`
 
 To train on CIFAR10
 
-` python3 train.py --dataset cifar10 --batch_size 64 --dim 32 -- output_size 3072`
+`python3 train.py --dataset cifar10 --batch_size 64 --dim 32 -o 3072`
 
 ### Acknowledgements
 
