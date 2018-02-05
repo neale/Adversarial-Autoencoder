@@ -3,9 +3,9 @@ A convolutional adversarial autoencoder implementation in pytorch using the WGAN
 
 There's a lot to tweak here as far as balancing the adversarial vs reconstruction loss, but this works and I'll update as I go along. 
 
-The MNIST GAN seems to converge at around 30K steps, while CIFAR10 arguable doesn't output anything realistic ever. Nonetheless it starts to looks ok at around 50K steps
+The MNIST GAN seems to converge at around 30K steps, while CIFAR10 arguably doesn't output anything realistic ever (compared to ACGAN). Nonetheless it starts to looks ok at around 50K steps
 
-The autoencoder components are able to output good reconstructions much faster than the GAN. ~10k steps on MNIST. The auto encoder is currently bad with CIFAR10
+The autoencoder components are able to output good reconstructions much faster than the GAN. ~10k steps on MNIST. The auto encoder is currently bad with CIFAR10 (under investigation)
 
 ## MNIST Gaussian Samples (GAN) - 33k steps
 
