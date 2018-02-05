@@ -1,6 +1,6 @@
 import os
 import gzip
-import urllib
+import urllib.request
 import numpy as np
 import _pickle as pickle
 
@@ -54,7 +54,7 @@ def load(batch_size, test_batch_size, n_labelled=None):
 
     if not os.path.isfile(filepath):
         print ("Couldn't find MNIST dataset in "+filepath+", downloading...")
-        urllib.urlretrieve(url, filepath)
+        urllib.request.urlretrieve(url, filepath)
 
     with gzip.open(filepath, 'rb') as f:
         train_data, dev_data, test_data = pickle.load(f, encoding='iso-8859-1')
