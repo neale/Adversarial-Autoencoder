@@ -33,6 +33,11 @@ clearly need to fix this
 
 ### Usage
 
+To start training right away just run 
+
+`start.sh`
+
+
 To train on MNIST
 
 `python3 train.py --dataset mnist --batch_size 50 --dim 32 -o 784`
@@ -44,3 +49,8 @@ To train on CIFAR10
 ### Acknowledgements
 
 For the wgan-gp components I mostly used [caogang's](https://github.com/caogang/wgan-gp) nice implementation
+
+
+### TODO
+
+Provide pretrained model files from on a google drive folder (push loader). 
