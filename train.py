@@ -31,6 +31,7 @@ def load_args():
     parser.add_argument('-e', '--epochs', default=200000, type=int)
     parser.add_argument('-o', '--output_dim', default=4096, type=int)
     parser.add_argument('--dataset', default='celeba')
+    parser.add_argument('--use_spectral_norm', default=True)
     args = parser.parse_args()
     return args
 
@@ -76,13 +77,21 @@ def train():
     torch.manual_seed(1)
     netG, netD, netE = load_models(args)
 
-    optimizerD = optim.Adam(netD.parameters(), lr=1e-4, betas=(0.5, 0.9))
-    optimizerG = optim.Adam(netG.parameters(), lr=1e-4, betas=(0.5, 0.9))
-    optimizerE = optim.Adam(netE.parameters(), lr=1e-4, betas=(0.5, 0.9))
+    if args.use_spectral_norm:
+        optimizerD = optim.Adam(filter(lambda p: p.requires_grad,
+            netD.parameters()), lr=2e-4, betas=(0.0,0.9))
+    else:
+        optimizerD = optim.Adam(netD.parameters(), lr=2e-4, betas=(0.5, 0.9))
+    optimizerG = optim.Adam(netG.parameters(), lr=2e-4, betas=(0.5, 0.9))
+    optimizerE = optim.Adam(netE.parameters(), lr=2e-4, betas=(0.5, 0.9))
+
+    schedulerD = optim.lr_scheduler.ExponentialLR(optimizerD, gamma=0.99)
+    schedulerG = optim.lr_scheduler.ExponentialLR(optimizerG, gamma=0.99) 
+    schedulerE = optim.lr_scheduler.ExponentialLR(optimizerE, gamma=0.99)
+    
     ae_criterion = nn.MSELoss()
     one = torch.FloatTensor([1]).cuda()
     mone = (one * -1).cuda()
-
     gen = utils.inf_train_gen(train_gen)
 
     for iteration in range(args.epochs):
@@ -103,6 +112,7 @@ def train():
         optimizerE.step()
         optimizerG.step()
 
+        
         """ Update D network """
 
         for p in netD.parameters():  
@@ -143,8 +153,11 @@ def train():
         G = G.mean()
         G.backward(mone)
         G_cost = -G
-        optimizerG.step()
-        
+        optimizerG.step() 
+
+        schedulerD.step()
+        schedulerG.step()
+        schedulerE.step()
         # Write logs and save samples 
         save_dir = './plots/'+args.dataset
         plot.plot(save_dir, '/disc cost', D_cost.cpu().data.numpy())
