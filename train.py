@@ -25,12 +25,12 @@ from data import cifar10
 def load_args():
 
     parser = argparse.ArgumentParser(description='aae-wgan')
-    parser.add_argument('-d', '--dim', default=64, type=int, help='latent space size')
+    parser.add_argument('-d', '--dim', default=100, type=int, help='latent space size')
     parser.add_argument('-l', '--gp', default=10, type=int, help='gradient penalty')
-    parser.add_argument('-b', '--batch_size', default=50, type=int)
+    parser.add_argument('-b', '--batch_size', default=64, type=int)
     parser.add_argument('-e', '--epochs', default=200000, type=int)
-    parser.add_argument('-o', '--output_dim', default=784, type=int)
-    parser.add_argument('--dataset', default='mnist')
+    parser.add_argument('-o', '--output_dim', default=4096, type=int)
+    parser.add_argument('--dataset', default='celeba')
     args = parser.parse_args()
     return args
 
@@ -45,6 +45,11 @@ def load_models(args):
         netG = generators.CIFARgenerator(args).cuda()
         netD = discriminators.CIFARdiscriminator(args).cuda()
         netE = encoders.CIFARencoder(args).cuda()
+
+    if args.dataset == 'celeba':
+        netG = generators.CELEBAgenerator(args).cuda()
+        netD = discriminators.CELEBAdiscriminator(args).cuda()
+        netE = encoders.CELEBAencoder(args).cuda()
 	
     print (netG, netD, netE)
     return (netG, netD, netE)
@@ -66,7 +71,8 @@ def stack_data(args, _data):
 
 def train():
     args = load_args()
-    train_gen, dev_gen, test_gen = utils.dataset_iterator(args)
+    train_gen = utils.dataset_iterator(args)
+    dev_gen = utils.dataset_iterator(args)
     torch.manual_seed(1)
     netG, netD, netE = load_models(args)
 
@@ -79,10 +85,6 @@ def train():
 
     gen = utils.inf_train_gen(train_gen)
 
-    preprocess = torchvision.transforms.Compose([
-	torchvision.transforms.ToTensor(),
-	torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-
     for iteration in range(args.epochs):
         start_time = time.time()
         """ Update AutoEncoder """
@@ -91,8 +93,9 @@ def train():
         netG.zero_grad()
         netE.zero_grad()
         _data = next(gen)
-        real_data = stack_data(args, _data)
-        real_data_v = autograd.Variable(real_data)
+        # real_data = stack_data(args, _data)
+        real_data = _data
+        real_data_v = autograd.Variable(real_data).cuda()
         encoding = netE(real_data_v)
         fake = netG(encoding)
         ae_loss = ae_criterion(fake, real_data_v)
@@ -106,8 +109,9 @@ def train():
             p.requires_grad = True 
         for i in range(5):
             _data = next(gen)
-            real_data = stack_data(args, _data)
-            real_data_v = autograd.Variable(real_data)
+            # real_data = stack_data(args, _data)
+            real_data = _data
+            real_data_v = autograd.Variable(real_data).cuda()
             # train with real data
             netD.zero_grad()
             D_real = netD(real_data_v)
@@ -151,9 +155,10 @@ def train():
         # Calculate dev loss and generate samples every 100 iters
         if iteration % 100 == 99:
             dev_disc_costs = []
-            for images, _ in dev_gen():
-                imgs = stack_data(args, images) 
-                imgs_v = autograd.Variable(imgs, volatile=True)
+            for i, (images, _) in enumerate(dev_gen):
+                # imgs = stack_data(args, images) 
+                imgs = images
+                imgs_v = autograd.Variable(imgs, volatile=True).cuda()
                 D = netD(imgs_v)
                 _dev_disc_cost = -D.mean().cpu().data.numpy()
                 dev_disc_costs.append(_dev_disc_cost)
@@ -166,6 +171,13 @@ def train():
         if (iteration < 5) or (iteration % 100 == 99):
             plot.flush()
         plot.tick()
+        if iteration % 100 == 0:
+            utils.save_model(netG, optimizerG, iteration,
+                    'models/{}/G_{}'.format(args.dataset, iteration))
+            utils.save_model(netD, optimizerD, iteration, 
+                    'models/{}/D_{}'.format(args.dataset, iteration))
+
+
         
 if __name__ == '__main__':
     train()
