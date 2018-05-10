@@ -4,5 +4,6 @@
 *.bz2
 *.tar
 *.pt
+*.jpg
 models/
 
