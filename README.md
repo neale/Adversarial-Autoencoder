@@ -15,9 +15,9 @@ The autoencoder components are able to output good reconstructions much faster t
 
 ![output_image](results/mnist/ae_samples_10799.jpg)
 
-## CelebA 64x64 Gaussian Samples (GAN) - 47000 steps
+## CelebA 64x64 Gaussian Samples (GAN) - 50k steps
 
-![output_image](plots/celeba/samples_47299.png)
+![output_image](plots/celeba/samples_51399.png)
 
 ## CIFAR10 Gaussian Samples (GAN) - 200k steps
 
