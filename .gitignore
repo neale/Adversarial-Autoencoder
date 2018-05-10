@@ -3,3 +3,6 @@
 *.gz
 *.bz2
 *.tar
+*.pt
+models/
+
