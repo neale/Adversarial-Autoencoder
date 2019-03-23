@@ -56,17 +56,13 @@ def dataset_iterator(args):
                                           drop_last=True,
                                           num_workers=4)
         return data_loader
-        #train_gen = celeba.load(args.batch_size, data_dir+'/train/')
-        #dev_gen = celeba.load(args.batch_size, data_dir+'/test/')
-        #test_gen = None
 
     return (train_gen, dev_gen, test_gen)
 
 
 def inf_train_gen(train_gen):
     while True:
-        for i, (images, _) in enumerate(train_gen):
-            # yield images.astype('float32').reshape(BATCH_SIZE, 3, 32, 32).transpose(0, 2, 3, 1)
+        for i, images in enumerate(train_gen()):
             yield images
 
 

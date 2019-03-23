@@ -45,7 +45,7 @@ def mnist_generator(data, batch_size, n_labelled, limit=None):
 
         else:
             for i in range(len(image_batches)):
-                yield (np.copy(image_batches[i]), np.copy(target_batches[i]))
+                yield (np.copy(image_batches[i]))
     return get_epoch
 
 

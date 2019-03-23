@@ -27,7 +27,7 @@ def load_args():
     parser = argparse.ArgumentParser(description='aae-wgan')
     parser.add_argument('-d', '--dim', default=100, type=int, help='latent space size')
     parser.add_argument('-l', '--gp', default=10, type=int, help='gradient penalty')
-    parser.add_argument('-b', '--batch_size', default=64, type=int)
+    parser.add_argument('-b', '--batch_size', default=50, type=int)
     parser.add_argument('-e', '--epochs', default=200000, type=int)
     parser.add_argument('-o', '--output_dim', default=4096, type=int)
     parser.add_argument('--dataset', default='celeba')
@@ -72,8 +72,7 @@ def stack_data(args, _data):
 
 def train():
     args = load_args()
-    train_gen = utils.dataset_iterator(args)
-    dev_gen = utils.dataset_iterator(args)
+    train_gen, dev_gen, test_gen = utils.dataset_iterator(args)
     torch.manual_seed(1)
     netG, netD, netE = load_models(args)
 
@@ -102,8 +101,7 @@ def train():
         netG.zero_grad()
         netE.zero_grad()
         _data = next(gen)
-        # real_data = stack_data(args, _data)
-        real_data = _data
+        real_data = stack_data(args, _data)
         real_data_v = autograd.Variable(real_data).cuda()
         encoding = netE(real_data_v)
         fake = netG(encoding)
@@ -119,8 +117,7 @@ def train():
             p.requires_grad = True 
         for i in range(5):
             _data = next(gen)
-            # real_data = stack_data(args, _data)
-            real_data = _data
+            real_data = stack_data(args, _data)
             real_data_v = autograd.Variable(real_data).cuda()
             # train with real data
             netD.zero_grad()
