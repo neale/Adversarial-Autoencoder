@@ -21,51 +21,6 @@ def save_model(net, optim, epoch, path):
         }, path)
 
 
-def get_transform(args):
-    if args.dataset == 'celeba':
-        crop_size = 108
-        re_size = 64
-        offset_height = (218 - crop_size) // 2
-        offset_width = (178 - crop_size) // 2
-        crop = lambda x: x[:, offset_height:offset_height + crop_size,
-                offset_width:offset_width + crop_size]
-        preprocess = transforms.Compose(
-                [transforms.ToTensor(),
-                    transforms.Lambda(crop),
-                    transforms.ToPILImage(),
-                    transforms.Scale(size=(re_size, re_size), interpolation=Image.BICUBIC),
-                    transforms.ToTensor(),
-                    transforms.Normalize(mean=[0.5] * 3, std=[0.5] * 3)])
-        return preprocess
-
-
-def dataset_iterator(args):
-    transform = get_transform(args)
-    if args.dataset == 'mnist':
-        train_gen, dev_gen, test_gen = mnist.load(args.batch_size, args.batch_size)
-    if args.dataset == 'cifar10':
-        data_dir = '/data0/images/cifar-10-batches-py/'
-        train_gen, dev_gen = cifar10.load(args.batch_size, data_dir)
-        test_gen = None
-    if args.dataset == 'celeba':
-        data_dir = '/data0/images/celeba'
-        data = datasets.ImageFolder(data_dir, transform=transform)
-        data_loader = torch.utils.data.DataLoader(data,
-                                          batch_size=args.batch_size,
-                                          shuffle=True,
-                                          drop_last=True,
-                                          num_workers=4)
-        return data_loader
-
-    return (train_gen, dev_gen, test_gen)
-
-
-def inf_train_gen(train_gen):
-    while True:
-        for i, images in enumerate(train_gen()):
-            yield images
-
-
 def generate_ae_image(iter, netE, netG, save_path, args, real_data):
     batch_size = args.batch_size
     datashape = netE.shape

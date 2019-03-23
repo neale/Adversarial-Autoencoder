@@ -11,7 +11,7 @@ class CELEBAgenerator(nn.Module):
         self.dim = args.dim
         preprocess = nn.Sequential(
                 nn.Linear(self.dim, 2* 4 * 4 * 4 * self.dim),
-                nn.BatchNorm2d(2 * 4 * 4 * 4 * self.dim),
+                nn.BatchNorm1d(2 * 4 * 4 * 4 * self.dim),
                 nn.ReLU(True),
                 )
         block1 = nn.Sequential(
@@ -58,7 +58,7 @@ class CIFARgenerator(nn.Module):
         self.dim = args.dim
         preprocess = nn.Sequential(
                 nn.Linear(self.dim, 4 * 4 * 4 * self.dim),
-                nn.BatchNorm2d(4 * 4 * 4 * self.dim),
+                nn.BatchNorm1d(4 * 4 * 4 * self.dim),
                 nn.ReLU(True),
                 )
         block1 = nn.Sequential(
@@ -86,7 +86,7 @@ class CIFARgenerator(nn.Module):
         output = self.block2(output)
         output = self.deconv_out(output)
         output = self.tanh(output)
-        return output.view(-1, 3, 32, 32)
+        return output.view(-1, 3*32*32)
 
 
 class MNISTgenerator(nn.Module):
@@ -117,13 +117,10 @@ class MNISTgenerator(nn.Module):
 
     def forward(self, input):
         output = self.preprocess(input)
-        #output = F.dropout(output, p=0.3, training=self.training)
         output = output.view(-1, 4*self.dim, 4, 4)
         output = self.block1(output)
-        #output = F.dropout(output, p=0.3, training=self.training)
         output = output[:, :, :7, :7]
         output = self.block2(output)
-        #output = F.dropout(output, p=0.3, training=self.training)
         output = self.deconv_out(output)
         output = self.sigmoid(output)
         return output.view(-1, 784)

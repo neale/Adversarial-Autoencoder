@@ -30,6 +30,7 @@ class CELEBAencoder(nn.Module):
         self.linear = nn.Linear(4*4*4*self.dim, self.dim)
 
     def forward(self, input):
+        input = input.view(-1, 3, 64, 64)
         output = self.main(input)
         output = output.view(-1, 4*4*4*self.dim)
         output = self.linear(output)
@@ -57,6 +58,7 @@ class CIFARencoder(nn.Module):
         self.linear = nn.Linear(4*4*4*self.dim, self.dim)
 
     def forward(self, input):
+        input = input.view(-1, 3, 32, 32)
         output = self.main(input)
         output = output.view(-1, 4*4*4*self.dim)
         output = self.linear(output)

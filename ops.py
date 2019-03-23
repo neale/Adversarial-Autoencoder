@@ -7,14 +7,14 @@ from scipy.misc import imsave
 
 
 def calc_gradient_penalty(args, model, real_data, gen_data):
-    batch_size = args.batch_size
     datashape = model.shape
-    alpha = torch.rand(batch_size, 1)
+    alpha = torch.rand(args.batch_size, 1)
+    real_data = real_data.view(args.batch_size, -1)
     if args.dataset == 'mnist':
         alpha = alpha.expand(real_data.size()).cuda()
     else:
-        alpha = alpha.expand(batch_size, int(real_data.nelement()/batch_size))
-        alpha = alpha.contiguous().view(batch_size, *(datashape[::-1])).cuda()
+        alpha = alpha.expand(args.batch_size, real_data.nelement()//args.batch_size)
+        alpha = alpha.contiguous().view(args.batch_size, -1).cuda()
     interpolates = alpha * real_data + ((1 - alpha) * gen_data)
     interpolates = interpolates.cuda()
     interpolates = autograd.Variable(interpolates, requires_grad=True)
