@@ -11,7 +11,6 @@ def calc_gradient_penalty(args, model, real_data, gen_data):
     datashape = model.shape
     alpha = torch.rand(batch_size, 1)
     if args.dataset == 'mnist':
-        print (alpha.size(), real_data.size())
         alpha = alpha.expand(real_data.size()).cuda()
     else:
         alpha = alpha.expand(batch_size, int(real_data.nelement()/batch_size))
