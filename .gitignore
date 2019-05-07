@@ -6,4 +6,17 @@
 *.pt
 *.jpg
 models/
+data/mnist/
+data/cifar/
+data/fashion_mnist/
+plots/
+__pycache__/
+*.swn
+*.swm
+*.swo
+*.swp
+*.swg
+*.swh
+*.swi
+*.swj
 
