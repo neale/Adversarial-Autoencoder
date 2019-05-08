@@ -5,7 +5,7 @@
 *.tar
 *.pt
 *.jpg
-models/
+
 data/mnist/
 data/cifar/
 data/fashion_mnist/
