@@ -7,6 +7,13 @@ The MNIST GAN seems to converge at around 30K steps, while CIFAR10 arguably does
 
 The autoencoder components are able to output good reconstructions much faster than the GAN. ~10k steps on MNIST. The auto encoder is currently bad with CIFAR10 (under investigation)
 
+
+# Note
+There is a lot here that I want to add and fix with regard to image generation and large scale training. 
+
+But I can't do anything until pytorch fixes these issues with gradient penalty [here](https://github.com/pytorch/pytorch/issues/19024) 
+
+
 ## MNIST Gaussian Samples (GAN) - 33k steps
 
 ![output image](plots/mnist/samples_33099.jpg)
